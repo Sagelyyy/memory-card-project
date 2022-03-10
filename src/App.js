@@ -20,7 +20,7 @@ function App() {
     const pref = "http://cdn.dota2.com"
     setHeroCards([])
     for (let i = 0; i < 9; i += 1) {
-      let currHero = (Math.floor(Math.random() * 122))
+      let currHero = (Math.floor(Math.random() * 123))
       console.log()
       setHeroCards(old => ([...old,
       {
@@ -28,8 +28,12 @@ function App() {
         heroPortrait: pref + allHeroData[currHero].img
       }]))
     }
+    console.log('=========Hero Cards=========')
     console.log(heroCards)
+    console.log('=========Hero Cards=========')
   }
+
+  console.log(allHeroData)
 
   return (
     <div className="App">
