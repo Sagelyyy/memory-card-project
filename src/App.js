@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Card from "./components/Card"
+import testData from "./testData.js"
 
 function App() {
 
@@ -11,9 +12,10 @@ function App() {
 
   React.useEffect(() => {
     const url = "https://api.opendota.com/api/heroStats"
-    fetch(url)
-      .then(res => res.json())
-      .then(data => setAllHeroData(data))
+    // fetch(url)
+    //   .then(res => res.json())
+    //   .then(data => setAllHeroData(data))
+    setAllHeroData(testData)
   }, [])
 
   function getRandomHeroes() {
@@ -28,17 +30,31 @@ function App() {
         heroPortrait: pref + allHeroData[currHero].img
       }]))
     }
-    console.log('=========Hero Cards=========')
-    console.log(heroCards)
-    console.log('=========Hero Cards=========')
   }
 
   console.log(allHeroData)
+  console.log('=========Hero Cards=========')
+  console.log(typeof(heroCards))
+  console.log(heroCards)
+  console.log('=========Hero Cards=========')
+
+  const cardElements = heroCards.map(elem =>  {
+    return(
+      <Card 
+        heroName={elem.heroName}
+      />
+    )
+  })
+
+  console.log(cardElements)
 
   return (
     <div className="App">
       <button onClick={getRandomHeroes}>Test</button>
-      <Card />
+      {heroCards.length > 0 ?
+            {cardElements}:
+          null}
+
     </div>
   );
 }
