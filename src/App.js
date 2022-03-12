@@ -12,28 +12,34 @@ function App() {
   const [gameOver, setGameOver] = React.useState(false)
   const [score, setScore] = React.useState(0)
   const [hiScore, setHiScore] = React.useState(0)
+  const [resolved, setResolved] = React.useState(false)
+
+
+  const fetchData = async () => {
+    const url = "https://api.opendota.com/api/heroStats"
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        setAllHeroData(data)
+        setResolved(true)
+      })
+  }
 
 
   React.useEffect(() => {
-    const url = "https://api.opendota.com/api/heroStats"
-    // fetch(url)
-    //   .then(res => res.json())
-    //   .then(data => setAllHeroData(data))
-    setAllHeroData(testData)
-    // why does this not get set right away?
-    //getRandomHeroes()
-  }, [])
+    fetchData()
+    getRandomHeroes()
+  }, [resolved])
 
-
-  function getRandomHeroes() {
+  const getRandomHeroes = async () => {
     const pref = "http://cdn.dota2.com"
     setHeroCards([])
     for (let i = 0; i < 10; i += 1) {
       let rand = (Math.floor(Math.random() * allHeroData.length))
       setHeroCards(old => ([...old,
       {
-        heroName: allHeroData[rand].localized_name,
-        heroPortrait: pref + allHeroData[rand].img
+        heroName: allHeroData[rand]?.localized_name,
+        heroPortrait: pref + allHeroData[rand]?.img
       }]))
     }
   }
@@ -68,39 +74,32 @@ function App() {
     }
   }
 
-
   const cardElements = heroCards.map(elem => {
     return (
       <Card
         onClick={() => handleClick(elem.heroName)}
         heroName={elem.heroName}
-        // heroPortrait={elem.heroPortrait}
-        heroPortrait="./logo512.png"
+        heroPortrait={elem.heroPortrait}
         key={nanoid()}
       />
     )
   })
 
-  // console.log('=========Hero Cards=========')
-  // console.log(heroCards)
-  // console.log('=========Hero Cards=========')
-  // console.log('=========Answers=========')
-  // console.log(answers)
-
   return (
     <div className="App">
-      <button onClick={getRandomHeroes}>Test</button>
-      <h3>Score: {score}</h3>
-      <h3>Hiscore: {hiScore}</h3>
+      <div className='App--score--container'>
+        <h1>Dota 2 Memory Game</h1>
+        <h3>Score: {score}</h3>
+        <h3>Hiscore: {hiScore}</h3>
+      </div>
       <div className='App--card--container'>
         {heroCards.length > 0 && gameOver === false ?
           cardElements :
           <div>
-            <h1>game over!</h1>
-            <button onClick={newGame}>New Game</button>
+            <h1 className='App--gameOver'>Game Over!</h1>
+            <button className="App--newGame" onClick={newGame}>New Game</button>
           </div>}
       </div>
-
     </div>
   );
 }

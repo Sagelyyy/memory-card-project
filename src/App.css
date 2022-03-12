@@ -2,6 +2,10 @@
   margin: 0;
 }
 
+body{
+  background-color: #A4230D;
+}
+
 
 .App {
   text-align: center;
@@ -23,10 +27,45 @@
 }
 
 .card--container{
+  border: 2px solid black;
   cursor: pointer;
 }
 
+.card--container:hover{
+  border: 2px solid black;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px black;
+}
+
 .card--name{
+  font-family: 'Montserrat';
+  font-weight: 700;
   font-size: 12px;
+}
+
+.App--score--container{
+  font-family: 'Montserrat';
+  font-weight: 700;
+  margin-top: 5vh;
+}
+
+.App--newGame{
+  cursor: pointer;
+  border: 2px solid black;
+  font-family: 'Montserrat';
+  font-weight: 700;
+  margin-top: 10px;
+  background-color: #8D3020;
+  width: 20rem;
+  height: 3rem;
+}
+
+.App--gameOver{
+  font-family: 'Montserrat';
+  font-weight: 700;
+}
+
+.App--newGame:hover{
+  box-shadow: 4px 4px 8px black;
 }
 
