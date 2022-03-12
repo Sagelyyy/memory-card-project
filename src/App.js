@@ -10,7 +10,8 @@ function App() {
   const [heroCards, setHeroCards] = React.useState([])
   const [answers, setAnswers] = React.useState([])
   const [gameOver, setGameOver] = React.useState(false)
-
+  const [score, setScore] = React.useState(0)
+  const [hiScore, setHiScore] = React.useState(0)
 
 
   React.useEffect(() => {
@@ -19,19 +20,20 @@ function App() {
     //   .then(res => res.json())
     //   .then(data => setAllHeroData(data))
     setAllHeroData(testData)
-    // getRandomHeroes()
+    // why does this not get set right away?
+    //getRandomHeroes()
   }, [])
+
 
   function getRandomHeroes() {
     const pref = "http://cdn.dota2.com"
     setHeroCards([])
     for (let i = 0; i < 10; i += 1) {
-      let currHero = (Math.floor(Math.random() * 123))
-      console.log()
+      let rand = (Math.floor(Math.random() * allHeroData.length))
       setHeroCards(old => ([...old,
       {
-        heroName: allHeroData[currHero].localized_name,
-        heroPortrait: pref + allHeroData[currHero].img
+        heroName: allHeroData[rand].localized_name,
+        heroPortrait: pref + allHeroData[rand].img
       }]))
     }
   }
@@ -40,20 +42,31 @@ function App() {
     if (answers.length === 0) {
       setAnswers([id])
       getRandomHeroes()
+      setScore(old => old + 1)
     } else {
-      for(let i=0;i<answers.length; i+=1){
-          if(answers[i] === id){
-            setGameOver(true)
-            setAnswers([])
-            console.log('game over')
-            return
-          }
+      for (let i = 0; i < answers.length; i += 1) {
+        if (answers[i] === id) {
+          setGameOver(true)
+          return
+        }
       }
-          setAnswers(old => [...old, id])
-          getRandomHeroes()
+      setAnswers(old => [...old, id])
+      getRandomHeroes()
+      setScore(old => old + 1)
     }
   }
 
+
+  function newGame() {
+    if (gameOver === true) {
+      if (score > hiScore) {
+        setHiScore(score)
+      }
+      setScore(0)
+      setAnswers([])
+      setGameOver(false)
+    }
+  }
 
 
   const cardElements = heroCards.map(elem => {
@@ -61,25 +74,31 @@ function App() {
       <Card
         onClick={() => handleClick(elem.heroName)}
         heroName={elem.heroName}
-        heroPortrait={elem.heroPortrait}
+        // heroPortrait={elem.heroPortrait}
+        heroPortrait="./logo512.png"
         key={nanoid()}
       />
     )
   })
 
-  console.log('=========Hero Cards=========')
-  console.log(heroCards)
-  console.log('=========Hero Cards=========')
-  console.log('=========Answers=========')
-  console.log(answers)
+  // console.log('=========Hero Cards=========')
+  // console.log(heroCards)
+  // console.log('=========Hero Cards=========')
+  // console.log('=========Answers=========')
+  // console.log(answers)
 
   return (
     <div className="App">
       <button onClick={getRandomHeroes}>Test</button>
+      <h3>Score: {score}</h3>
+      <h3>Hiscore: {hiScore}</h3>
       <div className='App--card--container'>
-        {heroCards.length > 0 ?
+        {heroCards.length > 0 && gameOver === false ?
           cardElements :
-          null}
+          <div>
+            <h1>game over!</h1>
+            <button onClick={newGame}>New Game</button>
+          </div>}
       </div>
 
     </div>
@@ -91,8 +110,8 @@ export default App;
 
 
 
-//Have a card component, map over it? to display data.
-//display in random order everytime the user clicks one.
+//Have a card component, map over it? to display data. done
+//display in random order everytime the user clicks one. done
 
 //Scoreboard that increments when user clicks correct answer (not the same as the previous card)
 //Best score
